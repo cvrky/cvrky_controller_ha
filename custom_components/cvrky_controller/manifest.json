@@ -1,0 +1,14 @@
+{
+  "domain": "cvrky_controller",
+  "name": "Cvrky Controller",
+  "config_flow": true,
+  "documentation": "https://www.home-assistant.io/integrations/cvrky_controller",
+  "requirements": ["aiohttp"],
+  "ssdp": [],
+  "zeroconf": [],
+  "homekit": {},
+  "dependencies": [],
+  "codeowners": [
+    "@cvrky"
+  ]
+}
