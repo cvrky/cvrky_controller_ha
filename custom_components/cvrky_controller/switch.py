@@ -6,7 +6,7 @@ import voluptuous
 import homeassistant.helpers.config_validation
 # Import the device class from the component that you want to support
 from homeassistant.components.switch import PLATFORM_SCHEMA, SwitchEntity
-from homeassistant.const import CONF_HOST
+from homeassistant.const import CONF_HOST, CONF_USERNAME, CONF_PASSWORD
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 from .cvrky_controller_control import CvrkyControllerControl, CvrkyControllerControlItem
@@ -16,12 +16,14 @@ _LOGGER = logging.getLogger(__name__)
 # Validation of the user's configuration
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     voluptuous.Required(CONF_HOST): homeassistant.helpers.config_validation.string,
+    voluptuous.Required(CONF_USERNAME): homeassistant.helpers.config_validation.string,
+    voluptuous.Required(CONF_PASSWORD): homeassistant.helpers.config_validation.string,
 })
 
 
 # noinspection PyUnusedLocal
 async def async_setup_entry(hass:HomeAssistant, config_entry:ConfigEntry, async_add_entities):
-    ctl = CvrkyControllerControl(config_entry.data["host"])
+    ctl = CvrkyControllerControl(config_entry.data["host"], config_entry.data["username"], config_entry.data["password"])
     async_add_entities([CvrkyController(ctli) for ctli in await ctl.list()], True)
     return True
 
