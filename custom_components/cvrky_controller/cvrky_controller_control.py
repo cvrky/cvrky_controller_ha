@@ -38,14 +38,16 @@ class CvrkyControllerControl:
 
         result = []
         for name, value in (await self.__get_status()).items():
-            result.append(CvrkyControllerControlItem(self.host, name, value[1]))
+            result.append(CvrkyControllerControlItem(self.host, self.username, self.password, name, value[1]))
         return result
 
 class CvrkyControllerControlItem:
     """Control class for single host."""
 
-    def __init__(self, host, name, change_keyword):
+    def __init__(self, host, username, password, name, change_keyword):
         self.host = host
+        self.username = username
+        self.password = password
         self.name = name
         self.change_keyword = change_keyword
 
@@ -53,5 +55,5 @@ class CvrkyControllerControlItem:
         await _request(self.host, "?{}".format(self.change_keyword), self.username, self.password)
 
     async def is_on(self):
-        status = json.loads(await _request(self.host, "?STATUS"))
+        status = json.loads(await _request(self.host, "?STATUS"), self.username, self.password)
         return status[self.name][0]
