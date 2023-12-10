@@ -11,7 +11,9 @@
         "step": {
             "user": {
                 "data": {
-                    "host": "Host nebo IP"
+                    "host": "Host nebo IP",
+                    "username": "Uživatel",
+                    "password": "Heslo"
                 }
             }
         }
