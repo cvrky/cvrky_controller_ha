@@ -4,14 +4,14 @@ import logging
 import voluptuous
 
 from homeassistant import config_entries, core, exceptions
-from homeassistant.const import CONF_HOST
+from homeassistant.const import CONF_HOST, CONF_USERNAME, CONF_PASSWORD
 
 from .cvrky_controller_control import CvrkyControllerControl
 from .const import DOMAIN  # pylint:disable=unused-import
 
 _LOGGER = logging.getLogger(__name__)
 
-STEP_USER_DATA_SCHEMA = voluptuous.Schema({CONF_HOST: str})
+STEP_USER_DATA_SCHEMA = voluptuous.Schema({CONF_HOST: str, CONF_USERNAME: str, CONF_PASSWORD: str})
 
 
 async def validate_input(hass: core.HomeAssistant, data):
@@ -20,7 +20,7 @@ async def validate_input(hass: core.HomeAssistant, data):
     Data has the keys from STEP_USER_DATA_SCHEMA with values provided by the user.
     """
 
-    ctl = CvrkyControllerControl(data[CONF_HOST])
+    ctl = CvrkyControllerControl(data[CONF_HOST], data[CONF_USERNAME], data[CONF_PASSWORD])
 
     if not await ctl.authenticate():
         raise CannotConnect
