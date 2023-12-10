@@ -55,5 +55,5 @@ class CvrkyControllerControlItem:
         await _request(self.host, "?{}".format(self.change_keyword), self.username, self.password)
 
     async def is_on(self):
-        status = json.loads(await _request(self.host, "?STATUS"), self.username, self.password)
+        status = json.loads(await _request(self.host, "?STATUS", self.username, self.password))
         return status[self.name][0]
