@@ -2,9 +2,10 @@ import aiohttp
 import json
 
 
-async def _request(host, path):
+async def _request(host, path, username, password):
+    auth = aiohttp.BasicAuth(username, password)
     async with aiohttp.ClientSession() as session:
-        async with session.get(f"http://{host}{path}") as resp:
+        async with session.get(f"http://{host}{path}", auth=auth) as resp:
             if resp.status != 200:
                 raise ValueError(f"Request failed with {resp.status}/{resp.reason}")
             return await resp.text()
@@ -13,13 +14,15 @@ async def _request(host, path):
 class CvrkyControllerControl:
     """Control class."""
 
-    def __init__(self, host):
+    def __init__(self, host, username, password):
         """Initialize."""
         self.host = host
+        self.username = username
+        self.password = password
         self.title = self.host.split('.')[0]
 
     async def __get_status(self):
-        return json.loads(await _request(self.host, "?STATUS"))
+        return json.loads(await _request(self.host, "?STATUS", self.username, self.password))
 
     async def authenticate(self) -> bool:
         """Test if we can authenticate with the host."""
@@ -47,7 +50,7 @@ class CvrkyControllerControlItem:
         self.change_keyword = change_keyword
 
     async def toggle(self):
-        await _request(self.host, "?{}".format(self.change_keyword))
+        await _request(self.host, "?{}".format(self.change_keyword), self.username, self.password)
 
     async def is_on(self):
         status = json.loads(await _request(self.host, "?STATUS"))
